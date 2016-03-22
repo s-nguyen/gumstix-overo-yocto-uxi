@@ -1,0 +1,54 @@
+From 6b1c137ada9781f7cd5fb5fca431908dfe7f529e Mon Sep 17 00:00:00 2001
+From: Timothy Lowery <tvlowery@utexas.edu>
+Date: Fri, 29 May 2015 14:19:03 -0500
+Subject: [PATCH] Add spidev to device tree
+
+---
+ arch/arm/boot/dts/omap3-overo-storm.dtsi | 34 ++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/arch/arm/boot/dts/omap3-overo-storm.dtsi b/arch/arm/boot/dts/omap3-overo-storm.dtsi
+index 6cb418b..732fa3c 100644
+--- a/arch/arm/boot/dts/omap3-overo-storm.dtsi
++++ b/arch/arm/boot/dts/omap3-overo-storm.dtsi
+@@ -33,3 +33,37 @@
+ 	};
+ };
+ 
++&omap3_pmx_core {
++	mcspi1_pins: pinmux_mcspi1_pins {
++		pinctrl-single,pins = <
++			OMAP3_CORE1_IOPAD(0x21c8, PIN_INPUT | MUX_MODE0)        /* mcspi1_clk.mcspi1_clk */
++			OMAP3_CORE1_IOPAD(0x21ca, PIN_INPUT | MUX_MODE0)        /* mcspi1_simo.mcspi1_simo */
++			OMAP3_CORE1_IOPAD(0x21cc, PIN_INPUT | MUX_MODE0)        /* mcspi1_somi.mcspi1_somi */
++			OMAP3_CORE1_IOPAD(0x21ce, PIN_INPUT | MUX_MODE0)        /* mcspi1_cs0.mcspi1_cs0 */
++		>;
++	};
++};
++
++&mcspi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mcspi1_pins>;
++	fsl,spi-num-chipselects = <2>;
++	cs-gpios = <
++		&gpio6 14 GPIO_ACTIVE_HIGH
++		&gpio6 15 GPIO_ACTIVE_HIGH
++	>;
++	status = "okay";
++
++	spidev0: spi@0 {
++		compatible = "spidev";
++		reg = <0>;
++		spi-max-frequency = <54000000>;
++	};
++ 
++	spidev1: spi@1 {
++		compatible = "spidev";
++		reg = <1>;
++		spi-max-frequency = <54000000>;
++	};
++};
++
+-- 
+1.9.1
+
